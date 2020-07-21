@@ -75,7 +75,7 @@ def vc_model_full_load(engine, plant_name):
                                [-1] + "] where plant_name='" + plant_name + "'")
             except Exception as e:
                 print(e)
-            df.to_sql(name="vc_model" + name.split('.')
+            df.to_sql(name="vc_model_api_testing" + name.split('.')
                       [-1], con=engine, index=False, if_exists='append')
     except Exception as e:
         logging.error("Error in the df_to_csv function", e)
@@ -117,7 +117,7 @@ def vc_input_full_load(engine, plant_name):
                     pass
             df.drop(columns=[i for i in df.columns if i.startswith(
                 "Unnamed:")], inplace=True)
-            df.to_sql(name="vc_input" + name.split('.')
+            df.to_sql(name="vc_input_api_testing" + name.split('.')
                       [-1], con=engine, index=False, if_exists='replace')
 
     except Exception as e:
@@ -142,7 +142,7 @@ def fc_model_east_full_load(engine, plant_name):
                 x, config['format_list'], config['ctype']) for x in list(df.columns)]
             df.dropna(axis=1, how='all', inplace=True)
             df['Plant_name'] = name.split('_')[1]
-            df.to_sql(name="fc_model", con=engine,
+            df.to_sql(name="fc_model_api_testing", con=engine,
                       index=False, if_exists='append')
     except Exception as e:
         logging.error("Error in the df_to_csv1 function", e)
@@ -163,7 +163,6 @@ def ncr_inputs_east_full_load(engine, plant_name):
 
     ncr_inputs_east_raw.to_sql('ncr_inputs_api_testing', engine, index=False, if_exists="replace", schema="dbo")
 
-        
 
 def main(plant_name, file_name):
     try:
