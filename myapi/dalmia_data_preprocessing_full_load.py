@@ -28,11 +28,9 @@ def dateparse1(listx, format_, ctype):
         return new_date
 
 
-def vc_model_full_load(engine, plant_name):
+def vc_model_full_load(engine, plant_name, file_name):
     try:
-        with open('config.json') as f:
-            data = json.load(f)
-        vc_model_raw = pd.ExcelFile(data['variable_cost'], engine='pyxlsb')
+        vc_model_raw = pd.ExcelFile(file_name, engine='pyxlsb')
         config_all = {'2.Clk-Input': {'header_list': [8, 9], 'format_list': '%b-%y', 'ctype': 'many', 'append': [0, 7]},
                       '3.Cem-Input': {'header_list': [10, 11], 'format_list': '%b-%y', 'ctype': 'many', 'append': [0, 11]},
                       '4.VC Summary': {'header_list': [1], 'format_list': "%b'%y", 'ctype': 'single', 'append': []},
@@ -81,11 +79,9 @@ def vc_model_full_load(engine, plant_name):
         logging.error("Error in the df_to_csv function", e)
 
 
-def vc_input_full_load(engine, plant_name):
+def vc_input_full_load(engine, plant_name, file_name):
     try:
-        with open('config.json') as f:
-            data = json.load(f)
-        vc_input_raw = pd.ExcelFile(data['vc_input'], engine='pyxlsb')
+        vc_input_raw = pd.ExcelFile(file_name, engine='pyxlsb')
         config_all = {'2.Clk-Input': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       '3.Cem-Input': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       '6.LS Cost': {'header_list': [1, 2], 'format_list': '%b-%y', 'ctype': 'many'},
@@ -124,11 +120,9 @@ def vc_input_full_load(engine, plant_name):
         logging.error("Error in the df_to_csv1 function", e)
 
 
-def fc_model_east_full_load(engine, plant_name):
+def fc_model_east_full_load(engine, plant_name, file_name):
     try:
-        with open('config.json') as f:
-            data = json.load(f)
-        fc_model_east_raw = pd.ExcelFile(data['fc_model'], engine='pyxlsb')
+        fc_model_east_raw = pd.ExcelFile(file_name, engine='pyxlsb')
         config_all = {'Summary_RGP': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       'Summary_KCW': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       'Summary_BCW': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
@@ -148,23 +142,24 @@ def fc_model_east_full_load(engine, plant_name):
         logging.error("Error in the df_to_csv1 function", e)
 
 
-def ncr_inputs_east_full_load(engine, plant_name):
-    with open('config.json') as f:
-        data = json.load(f)
+def ncr_inputs_east_full_load(engine, plant_name, file_name):
+    print("start")
     ncr_inputs_east_raw = pd.read_excel(
-        data['ncr_inputs_east'], skiprows=4, sheet_name='NCR Inputs', engine='pyxlsb')
+        file_name, skiprows=4, sheet_name='NCR Inputs', engine='pyxlsb')
 
     @event.listens_for(engine, "before_cursor_execute")
     def receive_before_cursor_execute(
         conn, cursor, statement, params, context, executemany
-            ):
-                if executemany:
-                    cursor.fast_executemany = True
+    ):
+        if executemany:
+            cursor.fast_executemany = True
+    print("sql")
+    ncr_inputs_east_raw.to_sql(
+        'ncr_inputs_api_testing', engine, index=False, if_exists="replace", schema="dbo")
+    print("complete")
 
-    ncr_inputs_east_raw.to_sql('ncr_inputs_api_testing', engine, index=False, if_exists="replace", schema="dbo")
 
-
-def main(plant_name, file_name):
+def main(plant_name, file_name, key):
     try:
         with open('config.json') as f:
             data = json.load(f)
@@ -179,7 +174,8 @@ def main(plant_name, file_name):
                    'ncr_input': ncr_inputs_east_full_load, 'fc_model': fc_model_east_full_load}
 
     try:
-        switch_case[file_name](engine, plant_name)
+        print("switch_case[key]",switch_case[key])
+        switch_case[key](engine, plant_name, file_name)
         engine.dispose()
     except Exception as e:
         logging.error(str(e))
