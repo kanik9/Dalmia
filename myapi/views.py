@@ -20,23 +20,25 @@ def snippet_list(request):
         try:
             for i in os.listdir("files/"):
                 os.remove("files/" + i)
-            f = open('config.json')
-            config = json.load(f)
-            f.close()
-            
-            switch_case = ['VC Input', 'VC Model', 'NCR Input', 'FC Model']
+                
+            switch_case = ['vc_input', 'vc_model', 'ncr_input', 'fc_model']
+            # for filename, file in request.FILES.items():
+                # name = request.FILES[filename].name
             for keys in switch_case:
                 if keys in request.data.keys():
-                    file = request.data[keys] 
+                    print("request.data[keys] ",request.data[keys] )
+                    fil = request.data[keys] 
+                    print("files: ",fil )
                     file_store = FileSystemStorage()
-                    file_store.save("files/"+file.name, file)  
-                    file_name = 'files/'+file.name
-                    config[keys] = 'files/'+file.name
-                    with open('config.json', 'w') as f:
-                        f.write(json.dumps(config))
-            plant_name = request.data['plant_name']
-            thread_script = Thread(target=main, args=(plant_name, file_name))
-            thread_script.start()
+                    file_store.save("files/"+fil.name, fil) 
+
+                    file_name = 'files/'+fil.name
+                    # config[keys] = 'files/'+files.name
+                    # with open('config.json', 'w') as f:
+                    #     f.write(json.dumps(config, indent=3))
+                    plant_name = request.data['plant_name']
+                    thread_script = Thread(target=main, args=(plant_name, file_name))
+                    thread_script.start()
         except Exception as e:
             print(e)
             return JsonResponse({"message": "error encounterd "+str(e)})
