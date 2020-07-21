@@ -23,18 +23,19 @@ def snippet_list(request):
             f = open('config.json')
             config = json.load(f)
             f.close()
-            file = request.data['vc_input']
-            file_store = FileSystemStorage()
-            file_store.save("files/"+file.name, file)
-            config['vc_input'] = 'files/'+file.name
-            file = request.data['vc_model']
-            file_store = FileSystemStorage()
-            file_store.save("files/"+file.name, file)
-            config['variable_cost'] = 'files/'+file.name
-            with open('config.json', 'w') as f:
-                f.write(json.dumps(config))
+            
+            switch_case = ['VC Input', 'VC Model', 'NCR Input', 'FC Model']
+            for keys in switch_case:
+                if keys in request.data.keys():
+                    file = request.data[keys] 
+                    file_store = FileSystemStorage()
+                    file_store.save("files/"+file.name, file)  
+                    file_name = 'files/'+file.name
+                    config[keys] = 'files/'+file.name
+                    with open('config.json', 'w') as f:
+                        f.write(json.dumps(config))
             plant_name = request.data['plant_name']
-            thread_script = Thread(target=main, args=(plant_name, ))
+            thread_script = Thread(target=main, args=(plant_name, file_name))
             thread_script.start()
         except Exception as e:
             print(e)
