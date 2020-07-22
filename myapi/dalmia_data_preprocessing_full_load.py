@@ -146,7 +146,7 @@ def fc_model_east_full_load(engine, plant_name, file_name):
         ):
             if executemany:
                 cursor.fast_executemany = True
-        fc_model_east_raw = pd.ExcelFile(file_name)
+        fc_model_east_raw = pd.ExcelFile(file_name,engine='pyxlsb')
         config_all = {'Summary_RGP': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       'Summary_KCW': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       'Summary_BCW': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
@@ -156,7 +156,7 @@ def fc_model_east_full_load(engine, plant_name, file_name):
         for name, config in config_all.items():
             logging.error(name)
             print(name)
-            df = pd.read_excel(fc_model_east_raw, sheet_name=name, header=config['header_list'])
+            df = pd.read_excel(fc_model_east_raw, sheet_name=name,engine='pyxlsb', header=config['header_list'])
             df.columns = [dateparse1(
                 x, config['format_list'], config['ctype']) for x in list(df.columns)]
             df.dropna(axis=1, how='all', inplace=True)
