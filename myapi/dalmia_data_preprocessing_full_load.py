@@ -148,6 +148,7 @@ def fc_model_east_full_load(engine, plant_name, file_name):
     try:
         logging.error("start")
         print("start")
+        engine.execute("truncate table [fc_model]")
         @event.listens_for(engine, "before_cursor_execute")
         def receive_before_cursor_execute(
             conn, cursor, statement, params, context, executemany
