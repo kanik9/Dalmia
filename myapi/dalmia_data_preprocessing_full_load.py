@@ -31,7 +31,7 @@ def dateparse1(listx, format_, ctype):
         return rest + new_date.strftime(format=format_)
     except Exception as e:
         new_date = x
-        if x.upper() in ['FY-20', 'FY-21'] and listx[0].lower() in ['revised', 'original']:
+        if x.upper() in ['FY-20', 'FY-21'] and listx[0].lower().strip() in ['revised', 'original']:
             new_date = str(listx[0]) + '_' + x
         return new_date
 
@@ -89,10 +89,10 @@ def vc_model_full_load(engine, plant_name, file_name):
                                [-1] + "] where plant_name='" + plant_name + "'")
             except Exception as e:
                 print(e)
-            df.to_sql(name="vc_model_api_testing" + name.split('.')
+            df.to_sql(name="vc_model" + name.split('.')
                       [-1], con=engine, index=False, if_exists='append')
     except Exception as e:
-        logging.error("Error in the df_to_csv function", e)
+        logging.error("Error in the vc_model function", e)
 
 
 def vc_input_full_load(engine, plant_name, file_name):
@@ -137,11 +137,11 @@ def vc_input_full_load(engine, plant_name, file_name):
                     pass
             df.drop(columns=[i for i in df.columns if i.startswith(
                 "Unnamed:")], inplace=True)
-            df.to_sql(name="vc_input_api_testing" + name.split('.')
+            df.to_sql(name="vc_input" + name.split('.')
                       [-1], con=engine, index=False, if_exists='replace')
 
     except Exception as e:
-        logging.error("Error in the df_to_csv1 function", e)
+        logging.error("Error in the vc_input function", e)
 
 
 def fc_model_east_full_load(engine, plant_name, file_name):
@@ -173,10 +173,10 @@ def fc_model_east_full_load(engine, plant_name, file_name):
                 df.drop(df.columns[[0, -5,-4, -3,-2]], axis = 1, inplace = True)
             else:
                 df.dropna(axis=1, how='all', inplace=True)
-            df.to_sql(name="fc_model_api_testing", con=engine,
+            df.to_sql(name="fc_model", con=engine,
                       index=False, if_exists='append')
     except Exception as e:
-        logging.error("Error in the df_to_csv1 function", e)
+        logging.error("Error in the fc_model function", e)
 
 
 def ncr_inputs_east_full_load(engine, plant_name, file_name):
@@ -194,7 +194,7 @@ def ncr_inputs_east_full_load(engine, plant_name, file_name):
     logging.error("sql")
     print("sql")
     ncr_inputs_east_raw.to_sql(
-        'ncr_inputs_api_testing', engine, index=False, if_exists="replace", schema="dbo")
+        'ncr_inputs', engine, index=False, if_exists="replace", schema="dbo")
     logging.error("complete")
     print("complete")
 
