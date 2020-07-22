@@ -31,6 +31,12 @@ def dateparse1(listx, format_, ctype):
 def vc_model_full_load(engine, plant_name, file_name):
     try:
         vc_model_raw = pd.ExcelFile(file_name, engine='pyxlsb')
+        @event.listens_for(engine, "before_cursor_execute")
+        def receive_before_cursor_execute(
+            conn, cursor, statement, params, context, executemany
+        ):
+            if executemany:
+                cursor.fast_executemany = True
         config_all = {'2.Clk-Input': {'header_list': [8, 9], 'format_list': '%b-%y', 'ctype': 'many', 'append': [0, 7]},
                       '3.Cem-Input': {'header_list': [10, 11], 'format_list': '%b-%y', 'ctype': 'many', 'append': [0, 11]},
                       '4.VC Summary': {'header_list': [1], 'format_list': "%b'%y", 'ctype': 'single', 'append': []},
@@ -47,7 +53,7 @@ def vc_model_full_load(engine, plant_name, file_name):
                       '12.Stock': {'header_list': [0, 2], 'format_list': '%b-%y', 'ctype': 'many', 'append': []}, }
 
         for name, config in config_all.items():
-            print(name)
+            logging.info(name)
             df = pd.read_excel(vc_model_raw, sheet_name=name,
                                engine='pyxlsb', header=config['header_list'])
             df.columns = [dateparse1(
@@ -83,6 +89,12 @@ def vc_model_full_load(engine, plant_name, file_name):
 def vc_input_full_load(engine, plant_name, file_name):
     try:
         vc_input_raw = pd.ExcelFile(file_name, engine='pyxlsb')
+        @event.listens_for(engine, "before_cursor_execute")
+        def receive_before_cursor_execute(
+            conn, cursor, statement, params, context, executemany
+        ):
+            if executemany:
+                cursor.fast_executemany = True
         config_all = {'2.Clk-Input': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       '3.Cem-Input': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       '6.LS Cost': {'header_list': [1, 2], 'format_list': '%b-%y', 'ctype': 'many'},
@@ -125,6 +137,12 @@ def vc_input_full_load(engine, plant_name, file_name):
 def fc_model_east_full_load(engine, plant_name, file_name):
     try:
         logging.info("start")
+        @event.listens_for(engine, "before_cursor_execute")
+        def receive_before_cursor_execute(
+            conn, cursor, statement, params, context, executemany
+        ):
+            if executemany:
+                cursor.fast_executemany = True
         fc_model_east_raw = pd.ExcelFile(file_name, engine='pyxlsb')
         config_all = {'Summary_RGP': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       'Summary_KCW': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
@@ -178,7 +196,7 @@ def main(plant_name, file_name, key):
                    'ncr_input': ncr_inputs_east_full_load, 'fc_model': fc_model_east_full_load}
 
     try:
-        print("switch_case[key]",switch_case[key])
+        print("switch_case[key]", switch_case[key])
         switch_case[key](engine, plant_name, file_name)
         engine.dispose()
     except Exception as e:
