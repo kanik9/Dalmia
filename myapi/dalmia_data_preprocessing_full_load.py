@@ -53,7 +53,8 @@ def vc_model_full_load(engine, plant_name, file_name):
                       '12.Stock': {'header_list': [0, 2], 'format_list': '%b-%y', 'ctype': 'many', 'append': []}, }
 
         for name, config in config_all.items():
-            logging.info(name)
+            logging.error(name)
+            print(name)
             df = pd.read_excel(vc_model_raw, sheet_name=name,
                                engine='pyxlsb', header=config['header_list'])
             df.columns = [dateparse1(
@@ -112,7 +113,8 @@ def vc_input_full_load(engine, plant_name, file_name):
                       '11.7.GF_MGH': {'header_list': [1], 'format_list': '%b-%y', 'ctype': 'single'},
                       '11.8.GF_USO': {'header_list': [1], 'format_list': '%b-%y', 'ctype': 'single'}, }
         for name, config in config_all.items():
-            logging.info(name)
+            logging.error(name)
+            print(name)
             df = pd.read_excel(vc_input_raw, sheet_name=name,
                                engine='pyxlsb', header=config['header_list'])
             df.columns = [dateparse1(
@@ -136,7 +138,8 @@ def vc_input_full_load(engine, plant_name, file_name):
 
 def fc_model_east_full_load(engine, plant_name, file_name):
     try:
-        logging.info("start")
+        logging.error("start")
+        print("start")
         @event.listens_for(engine, "before_cursor_execute")
         def receive_before_cursor_execute(
             conn, cursor, statement, params, context, executemany
@@ -151,7 +154,8 @@ def fc_model_east_full_load(engine, plant_name, file_name):
                       'Summary_DDSPL': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'}, }
 
         for name, config in config_all.items():
-            logging.info(name)
+            logging.error(name)
+            print(name)
             df = pd.read_excel(fc_model_east, sheet_name=name,
                                engine='pyxlsb', skiprows=1, header=config['header_list'])
             df.columns = [dateparse1(
@@ -165,7 +169,8 @@ def fc_model_east_full_load(engine, plant_name, file_name):
 
 
 def ncr_inputs_east_full_load(engine, plant_name, file_name):
-    logging.info("start")
+    logging.error("start")
+    print("start")
     ncr_inputs_east_raw = pd.read_excel(
         file_name, skiprows=4, sheet_name='NCR Inputs', engine='pyxlsb')
 
@@ -175,14 +180,18 @@ def ncr_inputs_east_full_load(engine, plant_name, file_name):
     ):
         if executemany:
             cursor.fast_executemany = True
-    logging.info("sql")
+    logging.error("sql")
+    print("sql")
     ncr_inputs_east_raw.to_sql(
         'ncr_inputs_api_testing', engine, index=False, if_exists="replace", schema="dbo")
-    logging.info("complete")
+    logging.error("complete")
+    print("complete")
 
 
 def main(plant_name, file_name, key):
     try:
+        print("in main function")
+        logging.error("in main function")
         with open('config.json') as f:
             data = json.load(f)
         params = urllib.parse.quote("DRIVER={" + str(data['DRIVER']) + "};SERVER=" + str(data['SERVER']) + ";DATABASE=" + str(
