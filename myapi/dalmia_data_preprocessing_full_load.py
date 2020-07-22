@@ -168,10 +168,11 @@ def fc_model_east_full_load(engine, plant_name, file_name):
                                skiprows=1, header=config['header_list'])
             df.columns = [dateparse1(
                 x, config['format_list'], config['ctype']) for x in list(df.columns)]
-            # df.dropna(axis=1, how='all', inplace=True)
             df['Plant_name'] = name.split('_')[1]
             if name == "Summary_RGP":
-                df.drop(df.columns[[0, -5,-4, -3,-2]], axis = 1, inplace = True)            
+                df.drop(df.columns[[0, -5,-4, -3,-2]], axis = 1, inplace = True)
+            else:
+                df.dropna(axis=1, how='all', inplace=True)
             df.to_sql(name="fc_model_api_testing", con=engine,
                       index=False, if_exists='append')
     except Exception as e:
