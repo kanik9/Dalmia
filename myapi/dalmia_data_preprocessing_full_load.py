@@ -14,8 +14,14 @@ pd.set_option('display.width', 1000)
 
 def dateparse1(listx, format_, ctype):
     rest = ''
+    x = ''
+    listx = list(listx)
     try:
+        
         if ctype == 'many':
+            if type(listx[1]) == dt.datetime:
+                listx[1] -= dt.datetime(1899, 12, 30)
+                listx[1] = listx[1].days
             x = listx[1]
             rest = str(listx[0]) + "_"
         else:
@@ -23,7 +29,7 @@ def dateparse1(listx, format_, ctype):
         new_date = dt.date(1899, 12, 30) + dt.timedelta(days=float(x))
         rest + new_date.strftime(format=format_)
         return rest + new_date.strftime(format=format_)
-    except:
+    except Exception as e:
         new_date = x
         return new_date
 
