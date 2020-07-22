@@ -31,7 +31,7 @@ def dateparse1(listx, format_, ctype):
         return rest + new_date.strftime(format=format_)
     except Exception as e:
         new_date = x
-        if x.upper() in ['FY-20', 'FY-21'] and list[0].lower() in ['revised', 'original']:
+        if x.upper() in ['FY-20', 'FY-21'] and listx[0].lower() in ['revised', 'original']:
             new_date = str(listx[0]) + '_' + x
         return new_date
 
@@ -168,10 +168,10 @@ def fc_model_east_full_load(engine, plant_name, file_name):
                                skiprows=1, header=config['header_list'])
             df.columns = [dateparse1(
                 x, config['format_list'], config['ctype']) for x in list(df.columns)]
-            df.dropna(axis=1, how='all', inplace=True)
+            # df.dropna(axis=1, how='all', inplace=True)
             df['Plant_name'] = name.split('_')[1]
             if name == "Summary_RGP":
-                df.drop(df.columns[[-4, -2,-3]], axis = 1, inplace = True)            
+                df.drop(df.columns[[0, -5,-4, -3,-2]], axis = 1, inplace = True)            
             df.to_sql(name="fc_model_api_testing", con=engine,
                       index=False, if_exists='append')
     except Exception as e:
