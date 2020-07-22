@@ -31,6 +31,8 @@ def dateparse1(listx, format_, ctype):
         return rest + new_date.strftime(format=format_)
     except Exception as e:
         new_date = x
+        if x.upper() in ['FY-20', 'FY-21'] and list[0].lower() in ['revised', [original']:
+            new_date = str(listx[0]) + '_' + x
         return new_date
 
 
