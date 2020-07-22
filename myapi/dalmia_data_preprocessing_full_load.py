@@ -47,6 +47,7 @@ def vc_model_full_load(engine, plant_name, file_name):
                       '12.Stock': {'header_list': [0, 2], 'format_list': '%b-%y', 'ctype': 'many', 'append': []}, }
 
         for name, config in config_all.items():
+            print(name)
             df = pd.read_excel(vc_model_raw, sheet_name=name,
                                engine='pyxlsb', header=config['header_list'])
             df.columns = [dateparse1(
@@ -99,6 +100,7 @@ def vc_input_full_load(engine, plant_name, file_name):
                       '11.7.GF_MGH': {'header_list': [1], 'format_list': '%b-%y', 'ctype': 'single'},
                       '11.8.GF_USO': {'header_list': [1], 'format_list': '%b-%y', 'ctype': 'single'}, }
         for name, config in config_all.items():
+            logging.info(name)
             df = pd.read_excel(vc_input_raw, sheet_name=name,
                                engine='pyxlsb', header=config['header_list'])
             df.columns = [dateparse1(
@@ -122,6 +124,7 @@ def vc_input_full_load(engine, plant_name, file_name):
 
 def fc_model_east_full_load(engine, plant_name, file_name):
     try:
+        logging.info("start")
         fc_model_east_raw = pd.ExcelFile(file_name, engine='pyxlsb')
         config_all = {'Summary_RGP': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       'Summary_KCW': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
@@ -130,6 +133,7 @@ def fc_model_east_full_load(engine, plant_name, file_name):
                       'Summary_DDSPL': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'}, }
 
         for name, config in config_all.items():
+            logging.info(name)
             df = pd.read_excel(fc_model_east, sheet_name=name,
                                engine='pyxlsb', skiprows=1, header=config['header_list'])
             df.columns = [dateparse1(
@@ -143,7 +147,7 @@ def fc_model_east_full_load(engine, plant_name, file_name):
 
 
 def ncr_inputs_east_full_load(engine, plant_name, file_name):
-    print("start")
+    logging.info("start")
     ncr_inputs_east_raw = pd.read_excel(
         file_name, skiprows=4, sheet_name='NCR Inputs', engine='pyxlsb')
 
@@ -153,10 +157,10 @@ def ncr_inputs_east_full_load(engine, plant_name, file_name):
     ):
         if executemany:
             cursor.fast_executemany = True
-    print("sql")
+    logging.info("sql")
     ncr_inputs_east_raw.to_sql(
         'ncr_inputs_api_testing', engine, index=False, if_exists="replace", schema="dbo")
-    print("complete")
+    logging.info("complete")
 
 
 def main(plant_name, file_name, key):
