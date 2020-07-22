@@ -170,7 +170,7 @@ def fc_model_east_full_load(engine, plant_name, file_name):
                 x, config['format_list'], config['ctype']) for x in list(df.columns)]
             df['Plant_name'] = name.split('_')[1]
             if name == "Summary_RGP":
-                df.drop(df.columns[[0, -5,-4, -3,-2]], axis = 1, inplace = True)
+                df.drop(df.columns[[0, 16,-5,-4, -3,-2]], axis = 1, inplace = True)
             else:
                 df.dropna(axis=1, how='all', inplace=True)
             df.to_sql(name="fc_model", con=engine,
