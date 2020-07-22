@@ -146,7 +146,7 @@ def fc_model_east_full_load(engine, plant_name, file_name):
         ):
             if executemany:
                 cursor.fast_executemany = True
-        fc_model_east_raw = pd.ExcelFile(file_name, engine='pyxlsb')
+        fc_model_east_raw = pd.ExcelFile(file_name)
         config_all = {'Summary_RGP': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       'Summary_KCW': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
                       'Summary_BCW': {'header_list': [0, 1], 'format_list': '%b-%y', 'ctype': 'many'},
