@@ -156,8 +156,7 @@ def fc_model_east_full_load(engine, plant_name, file_name):
         for name, config in config_all.items():
             logging.error(name)
             print(name)
-            df = pd.read_excel(fc_model_east_raw, sheet_name=name,
-                               skiprows=1, header=config['header_list'])
+            df = pd.read_excel(fc_model_east_raw, sheet_name=name, header=config['header_list'])
             df.columns = [dateparse1(
                 x, config['format_list'], config['ctype']) for x in list(df.columns)]
             df.dropna(axis=1, how='all', inplace=True)
