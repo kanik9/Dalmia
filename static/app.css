@@ -1,0 +1,20 @@
+section
+{
+   width: 70%;
+   margin: auto;
+   height: 50%;
+   border: 2px solid #b369af ;
+   align: center;
+   background-color: #696969;
+   margin-bottom: 2%;
+}
+#cont
+{
+    margin: auto;
+    padding: 30px;
+    width : 70%;
+    height : 100%;
+    align-content: center;
+    background-color: #FFA500;
+    padding-top : 50px;
+}

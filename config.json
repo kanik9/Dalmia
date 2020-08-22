@@ -1,8 +1,7 @@
 {
-    "variable_cost": "files/VariableCostModel-Demo.xlsb",
-    "vc_input": "files/VCInput Screen.xlsb",
-    "fc_model": "files/FCModel_EAST.xlsb",
-    "ncr_inputs_east": "files/1.NCR Inputs-East.xlsb",
+    "vc_model": "VC Model_RGP.xlsx",
+    "fc_model": "FC_Model_RGP.xlsx",
+    "ncr_input": "NCR Inputs-East.xlsx",
 
     "DRIVER": "ODBC Driver 17 for SQL Server",
     "SERVER": "dalmia.database.windows.net",

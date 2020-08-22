@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load bootstrap4 %}
+
+
+{% block title %}
+    File Upload
+{% endblock %}
+
+{% block content %}
+    <template id="tooltip">
+            <li>
+                <h2>Error : </h2>
+                <p id="error"></p>
+            </li>
+        </template>
+        <section id="sendData">
+            <div class="container">
+                <div class="jumbotron">
+                    <div class="container-fluid">
+                        <div>
+                            <h1>Upload File</h1>
+                        </div>
+                        <form method="POST"  id="form" enctype="multipart/form-data">
+                                <label for="keys">Keys : </label>
+                                <input id="keys" type="text" >
+                                <label for="id">Id : </label>
+                                <input id="id" type="text">
+                                <label for="myFile">File : </label>
+                                <input id="myFile" type="file"  >
+                                <button id="button" type="button">
+                                    Submit
+                                </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="result">
+            <h1>Outcome</h1>
+            <ul id="error-list"></ul>
+        </section>
+
+
+{% endblock %}
